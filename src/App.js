@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import "./App.css";
+import "./index.css";
+import Header from "./pages/home";
+import Pph21 from "./pages/pph21";
+import Pph23 from "./pages/pph23";
+import Pph4 from "./pages/pph4(2)";
 
 function App() {
+  //   return <PPh21Calculator />;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Pph21 />} />
+          <Route path="/pph21" element={<Pph21 />} />
+          <Route path="/pph23" element={<Pph23 />} />
+          <Route path="/pph4" element={<Pph4/>} />
+          {/* <Route path="/ppn" element={<Ppn />} /> */}
+        </Routes>
+      </Router>
+    </>
   );
 }
 
