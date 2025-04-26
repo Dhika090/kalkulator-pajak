@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import "../App.css";
 
@@ -433,7 +433,7 @@ export default function KalkulatorPajak() {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".xlsx, .xls";
-  
+
     input.onchange = async (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -444,39 +444,33 @@ export default function KalkulatorPajak() {
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
-  
-          console.log("Isi Excel PPh21 Final:", jsonData);
-  
+
+          console.log("Isi Excel:", jsonData);
+
           if (jsonData.length > 0) {
             const record = jsonData[0];
-  
-            // Cek apakah KodePajak ada dalam KodeObjekPajakfinal
-            const validKodePajak = KodeObjekPajakfinal.find(option => 
-              option.value.trim().toUpperCase() === (record.KodePajak?.trim().toUpperCase())
-            );
-            
-            if (!validKodePajak) {
-              alert("Kode Pajak tidak valid!");
-              return; // Hentikan proses jika Kode Pajak tidak valid
-            }
-  
-            // Isi kolom inputan dengan data dari Excel
-            setKodePajak(record?.KodePajak || "");
-            setPenghasilanBruto(record?.PenghasilanBruto || 0);
-            setIncludePotonganPph21(record?.IncludePotonganPph21?.toLowerCase() === "ya");
-  
-            if (record?.PotonganPph21 !== undefined) {
-              setPotonganPph21(record.PotonganPph21);
-            }
+
+            // ✅ Clear semua inputan dulu
+            setKodePajak("");
+            setPenghasilanBruto(0);
+            setIncludePotonganPph21(false);
+            setPotonganPph21(0);
+
+            // ✅ Setelah clear, baru isi dari excel
+            setTimeout(() => {
+              setKodePajak(record.KodePajak || "");
+              setPenghasilanBruto(Number(record.PenghasilanBruto) || 0);
+              setIncludePotonganPph21(record.IncludePotonganPph21 === "Ya");
+              setPotonganPph21(Number(record.PotonganPph21) || 0);
+            }, 0); // kasih delay 0ms supaya clear dulu baru set data baru
           }
         };
         reader.readAsBinaryString(file);
       }
     };
-  
+
     input.click();
   };
-  
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
