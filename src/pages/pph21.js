@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as XLSX from "xlsx";
 import "../App.css";
 
 const tarifPajakBerlapisA = [
@@ -147,6 +148,7 @@ const kodePajakOptions = [
   { value: "21-100-13", label: "Peserta Kegiatan" },
 ];
 
+// PPH 21 bulanan
 const KodeObjekPajak = [
   { value: "21-100-01", label: "21-100-01 - Pegawai Tetap" },
   { value: "21-100-02", label: "21-100-02 - Penerima Pensiun Berkala" },
@@ -388,6 +390,94 @@ export default function KalkulatorPajak() {
     handleManualInput(no, numericValue);
   };
 
+  // import excel pph 21 bulanan
+  const handleImportExcel = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".xlsx, .xls";
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const data = evt.target.result;
+          const workbook = XLSX.read(data, { type: "binary" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+          console.log("Isi Excel:", jsonData);
+
+          if (jsonData.length > 0) {
+            const record = jsonData[0];
+
+            setJenisPemotongan(record.JenisPemotongan || "");
+            setKodePajak(record.KodePajak || "");
+            setPtkp(record.PTKP || 54000000);
+            setPenghasilanBruto(record.PenghasilanBruto || 0);
+            setSkema(record.Skema || "gross");
+            setIncludePotonganPph21(record.IncludePotonganPph21 === "Ya");
+            if (record.PotonganPph21) {
+              setPotonganPph21(record.PotonganPph21);
+            }
+          }
+        };
+        reader.readAsBinaryString(file);
+      }
+    };
+    input.click();
+  };
+
+  // import excel pph 21 final
+  const handleImportExcelPph21Final = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".xlsx, .xls";
+  
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const data = evt.target.result;
+          const workbook = XLSX.read(data, { type: "binary" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+  
+          console.log("Isi Excel PPh21 Final:", jsonData);
+  
+          if (jsonData.length > 0) {
+            const record = jsonData[0];
+  
+            // Cek apakah KodePajak ada dalam KodeObjekPajakfinal
+            const validKodePajak = KodeObjekPajakfinal.find(option => 
+              option.value.trim().toUpperCase() === (record.KodePajak?.trim().toUpperCase())
+            );
+            
+            if (!validKodePajak) {
+              alert("Kode Pajak tidak valid!");
+              return; // Hentikan proses jika Kode Pajak tidak valid
+            }
+  
+            // Isi kolom inputan dengan data dari Excel
+            setKodePajak(record?.KodePajak || "");
+            setPenghasilanBruto(record?.PenghasilanBruto || 0);
+            setIncludePotonganPph21(record?.IncludePotonganPph21?.toLowerCase() === "ya");
+  
+            if (record?.PotonganPph21 !== undefined) {
+              setPotonganPph21(record.PotonganPph21);
+            }
+          }
+        };
+        reader.readAsBinaryString(file);
+      }
+    };
+  
+    input.click();
+  };
+  
+
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
@@ -510,12 +600,20 @@ export default function KalkulatorPajak() {
               </div>
             )}
 
-            <button
-              onClick={handleHitungPajak}
-              className="bg-yellow-500 text-white w-full py-2 rounded-md hover:bg-yellow-600"
-            >
-              Hitung
-            </button>
+            <div className="space-y-3 mt-4">
+              <button
+                onClick={handleHitungPajak}
+                className="bg-yellow-500 text-white w-full py-2 rounded-md hover:bg-yellow-600"
+              >
+                Hitung
+              </button>
+              <button
+                onClick={handleImportExcel}
+                className="bg-green-500 text-white w-full py-2 rounded-md hover:bg-green-600"
+              >
+                Import Excel
+              </button>
+            </div>
 
             <div className="mt-4 p-4 border rounded-md bg-gray-50">
               <h3 className="font-bold">Hasil Perhitungan PPh 21</h3>
@@ -603,12 +701,23 @@ export default function KalkulatorPajak() {
               </div>
             )}
 
-            <button
-              onClick={handleHitungPajakFinal}
-              className="bg-yellow-500 text-white w-full py-2 rounded-md hover:bg-yellow-600"
-            >
-              Hitung
-            </button>
+            {/* Tombol Hitung */}
+            <div className="space-y-2">
+              <button
+                onClick={handleHitungPajakFinal}
+                className="bg-yellow-500 text-white w-full py-2 rounded-md hover:bg-yellow-600"
+              >
+                Hitung
+              </button>
+
+              {/* Tombol Import Excel */}
+              <button
+                onClick={handleImportExcelPph21Final}
+                className="bg-green-500 text-white w-full py-2 rounded-md hover:bg-green-600 mb-3"
+              >
+                Import Excel
+              </button>
+            </div>
 
             <div className="mt-4 p-4 border rounded-md bg-gray-50">
               <h3 className="font-bold">Hasil Perhitungan PPh 21</h3>
