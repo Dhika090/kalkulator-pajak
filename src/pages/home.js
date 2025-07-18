@@ -9,7 +9,7 @@ export default function Header() {
           <div className="bg-yellow-400 p-1 rounded-md">
             <img src="/logo.svg" alt="Logo" className="w-6 h-6" />
           </div>
-          <h1 className="text-lg font-bold">KALKULATOR PAJAK</h1>
+          <h1 className="text-lg font-bold">Kawan Hitung Pajak Era Digital</h1>
         </div>
 
         {/* Navigasi */}

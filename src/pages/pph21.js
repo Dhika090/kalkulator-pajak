@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import * as XLSX from "xlsx";
 import "../App.css";
 
@@ -183,14 +183,14 @@ const formatRupiahInput = (value) => {
 };
 
 const ptkpOptions = [
-  { label: "TK/0", value: 54000000 },
-  { label: "TK/1", value: 58500000 },
-  { label: "TK/2", value: 63000000 },
-  { label: "TK/3", value: 67500000 },
-  { label: "K/0", value: 58500000 },
-  { label: "K/1", value: 63000000 },
-  { label: "K/2", value: 67500000 },
-  { label: "K/3", value: 72000000 },
+  { label: "TK/0 - TER A", value: 54000000 },
+  { label: "TK/1 - TER A", value: 58500000 },
+  { label: "TK/2 - TER A", value: 63000000 },
+  { label: "TK/3 - TER B", value: 67500000 },
+  { label: "K/0 - TER B", value: 58500000 },
+  { label: "K/1 - TER B", value: 63000000 },
+  { label: "K/2 - TER B", value: 67500000 },
+  { label: "K/3 - TER C", value: 72000000 },
 ];
 
 const Perhitungan = [
@@ -473,8 +473,8 @@ export default function KalkulatorPajak() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
+    <div className="min-h-screen flex justify-center bg-gray-100 px-4 sm:px-4 w-full max-w-content">
+      <div className="bg-white shadow-lg rounded-lg mb-8 mt-8 p-4 sm:p-4 w-full max-w-2xl">
         <h2 className="text-xl font-bold mb-4 text-center">
           KALKULATOR PAJAK PPh 21
         </h2>
@@ -497,7 +497,6 @@ export default function KalkulatorPajak() {
             <option value="PPh 21 Tahunan">PPh 21 Tahunan (A1/A2)</option>
           </select>
         </div>
-
         {jenisPemotongan === "PPh 21 Bulanan" && (
           <div>
             <div className="mb-3">
@@ -626,7 +625,6 @@ export default function KalkulatorPajak() {
             </div>
           </div>
         )}
-
         {jenisPemotongan === "PPh 21 Final" && (
           <div>
             <div className="mb-3">
@@ -730,7 +728,6 @@ export default function KalkulatorPajak() {
             </div>
           </div>
         )}
-
         {jenisPemotongan === "PPh 21 Tidak Final" && (
           <div>
             {/* Dropdown Kode Pajak */}
@@ -1328,7 +1325,6 @@ export default function KalkulatorPajak() {
             </div>
           </div>
         )}
-
         {jenisPemotongan === "PPh 21 Tahunan" && (
           <div>
             <div className="mb-3">
