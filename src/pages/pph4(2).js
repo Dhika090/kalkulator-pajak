@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Select from "react-select";
 
 const taxOptions = [
@@ -40,7 +40,7 @@ const taxOptions = [
   {
     value: "28-402-03",
     label: "28-402-03 - Pengalihan Hak kepada Pemerintah/BUMN",
-    rate: 2.50,
+    rate: 2.5,
   },
   {
     value: "28-403-01",
@@ -70,7 +70,7 @@ const taxOptions = [
   {
     value: "28-404-05",
     label: "28-404-05 - Bunga Deposito USD DHE (1 bulan)",
-    rate: 7.50,
+    rate: 7.5,
   },
   {
     value: "28-404-06",
@@ -90,7 +90,7 @@ const taxOptions = [
   {
     value: "28-404-09",
     label: "28-404-09 - Bunga Deposito di Luar Negeri",
-    rate: 7.50,
+    rate: 7.5,
   },
   { value: "28-404-10", label: "28-404-10 - Diskonto Sertifikat BI", rate: 20 },
   { value: "28-404-11", label: "28-404-11 - Jasa Giro", rate: 20 },
@@ -194,7 +194,7 @@ const PPh42Form = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow rounded-lg">
+    <div className="max-w-md mx-auto mt-8 p-6 bg-white shadow rounded-lg">
       <h2 className="text-xl font-semibold mb-4">PPh 4(2)</h2>
       <div className="mb-4">
         <label className="block text-gray-700">Kode Objek Pajak</label>

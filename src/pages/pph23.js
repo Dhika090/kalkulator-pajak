@@ -133,7 +133,7 @@ export default function PPh23Calculator() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-lg mx-auto p-6 mt-8 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-700 mb-4">PPh 23</h2>
 
       {/* Dropdown Kode Objek Pajak */}

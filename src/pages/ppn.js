@@ -34,6 +34,12 @@ const PPNCalculator = () => {
             />
           </div>
 
+          <div className="flex flex-col sm:flex-row items-center">
+            <label className="w-full sm:w-1/3 text-slate-600 mb-1 sm:mb-0">
+              Rumus : 11/12 x DPP
+            </label>
+          </div>
+
           {/* Tarif */}
           <div className="flex flex-col sm:flex-row items-center">
             <label className="w-full sm:w-1/3 text-slate-600 mb-1 sm:mb-0">
