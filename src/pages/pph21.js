@@ -474,13 +474,13 @@ export default function KalkulatorPajak() {
 
   return (
     <div
-      className="min-h-screen flex justify-center items-center bg-gray-200 px-4 bg-cover bg-center"
+      className="min-h-screen flex justify-center items-center bg-gray-200 px-4 sm:px-6 md:px-10 bg-cover bg-center bg-no-repeat "
       style={{
         backgroundImage: "url('/REV1.jpg')",
       }}
     >
       <div
-        className="bg-white/80 backdrop-blur-md shadow-2xl rounded-xl p-6 w-full max-w-2xl"
+        className="bg-white/80 backdrop-blur-md shadow-2xl rounded-xl p-6 w-full max-w-2xl mt-7"
         style={{ marginBottom: "31pc" }}
       >
         <h2 className="text-2xl font-bold mb-4 text-center">
