@@ -133,55 +133,62 @@ export default function PPh23Calculator() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 mt-8 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-700 mb-4">PPh 23</h2>
+    <div
+      className="min-h-screen flex justify-center bg-gray-100 px-4 bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/REV1.jpg')",
+      }}
+    >
+      <div className="bg-white shadow-lg rounded-lg mt-4 p-6 w-full max-w-2xl">
+        <h2 className="text-2xl font-bold text-gray-700 mb-4">PPh 23</h2>
 
-      {/* Dropdown Kode Objek Pajak */}
-      <div className="mb-4">
-        <label className="block text-gray-700">Kode Objek Pajak</label>
-        <Select
-          options={kodeObjekPajakList.map((item) => ({
-            value: item.kode,
-            label: `${item.kode} - ${item.deskripsi}`,
-          }))}
-          value={selectedKode}
-          onChange={handleKodeChange}
-          placeholder="Pilih Kode Objek Pajak"
-        />
-      </div>
+        {/* Dropdown Kode Objek Pajak */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Kode Objek Pajak</label>
+          <Select
+            options={kodeObjekPajakList.map((item) => ({
+              value: item.kode,
+              label: `${item.kode} - ${item.deskripsi}`,
+            }))}
+            value={selectedKode}
+            onChange={handleKodeChange}
+            placeholder="Pilih Kode Objek Pajak"
+          />
+        </div>
 
-      {/* Input Penghasilan Bruto */}
-      <div className="mb-4">
-        <label className="block text-gray-600 mb-1">Penghasilan Bruto</label>
-        <input
-          type="text"
-          className="w-full border p-2 rounded-md bg-white"
-          value={formatRupiah(penghasilanBruto)}
-          onChange={handlePenghasilanChange}
-          placeholder="0"
-        />
-      </div>
+        {/* Input Penghasilan Bruto */}
+        <div className="mb-4">
+          <label className="block text-gray-600 mb-1">Penghasilan Bruto</label>
+          <input
+            type="text"
+            className="w-full border p-2 rounded-md bg-white"
+            value={formatRupiah(penghasilanBruto)}
+            onChange={handlePenghasilanChange}
+            placeholder="0"
+          />
+        </div>
 
-      {/* Tarif Pajak */}
-      <div className="mb-4">
-        <label className="block text-gray-600 mb-1">Tarif</label>
-        <input
-          type="text"
-          className="w-full border p-2 rounded-md bg-gray-100"
-          value={`${tarif} %`}
-          readOnly
-        />
-      </div>
+        {/* Tarif Pajak */}
+        <div className="mb-4">
+          <label className="block text-gray-600 mb-1">Tarif</label>
+          <input
+            type="text"
+            className="w-full border p-2 rounded-md bg-gray-100"
+            value={`${tarif} %`}
+            readOnly
+          />
+        </div>
 
-      {/* Hasil Perhitungan PPh 23 */}
-      <div>
-        <label className="block text-gray-600 mb-1">PPh 23</label>
-        <input
-          type="text"
-          className="w-full border p-2 rounded-md bg-gray-100"
-          value={formatRupiah(pph23)}
-          readOnly
-        />
+        {/* Hasil Perhitungan PPh 23 */}
+        <div>
+          <label className="block text-gray-600 mb-1">PPh 23</label>
+          <input
+            type="text"
+            className="w-full border p-2 rounded-md bg-gray-100"
+            value={formatRupiah(pph23)}
+            readOnly
+          />
+        </div>
       </div>
     </div>
   );

@@ -194,44 +194,51 @@ const PPh42Form = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white shadow rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">PPh 4(2)</h2>
-      <div className="mb-4">
-        <label className="block text-gray-700">Kode Objek Pajak</label>
-        <Select
-          options={taxOptions}
-          value={selectedTax}
-          onChange={handleTaxChange}
-          placeholder="Pilih Kode Objek Pajak"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Penghasilan Bruto</label>
-        <input
-          type="text"
-          value={formatRupiah(grossIncome)}
-          onChange={handleIncomeChange}
-          className="w-full px-3 py-2 border rounded-md"
-          placeholder="0"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Tarif</label>
-        <input
-          type="text"
-          value={selectedTax ? `${selectedTax.rate} %` : "-"}
-          readOnly
-          className="w-full px-3 py-2 border rounded-md bg-gray-100"
-        />
-      </div>
-      <div>
-        <label className="block text-gray-700">PPh 4(2)</label>
-        <input
-          type="text"
-          value={calculatedTax.toLocaleString("id-ID")}
-          readOnly
-          className="w-full px-3 py-2 border rounded-md bg-gray-100"
-        />
+    <div
+      className="min-h-screen flex justify-center bg-gray-100 px-4 bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/REV1.jpg')",
+      }}
+    >
+      <div className="bg-white shadow-lg rounded-lg mt-4 p-6 w-full max-w-2xl">
+        <h2 className="text-xl font-semibold mb-4">PPh 4(2)</h2>
+        <div className="mb-4">
+          <label className="block text-gray-700">Kode Objek Pajak</label>
+          <Select
+            options={taxOptions}
+            value={selectedTax}
+            onChange={handleTaxChange}
+            placeholder="Pilih Kode Objek Pajak"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Penghasilan Bruto</label>
+          <input
+            type="text"
+            value={formatRupiah(grossIncome)}
+            onChange={handleIncomeChange}
+            className="w-full px-3 py-2 border rounded-md"
+            placeholder="0"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Tarif</label>
+          <input
+            type="text"
+            value={selectedTax ? `${selectedTax.rate} %` : "-"}
+            readOnly
+            className="w-full px-3 py-2 border rounded-md bg-gray-100"
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">PPh 4(2)</label>
+          <input
+            type="text"
+            value={calculatedTax.toLocaleString("id-ID")}
+            readOnly
+            className="w-full px-3 py-2 border rounded-md bg-gray-100"
+          />
+        </div>
       </div>
     </div>
   );

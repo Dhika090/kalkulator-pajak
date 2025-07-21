@@ -14,8 +14,13 @@ const PPNCalculator = () => {
   const total = parseFloat(dpp) + ppn;
 
   return (
-    <div className="min-h-screen flex justify-center bg-gray-100 px-4">
-      <div className="bg-white shadow-lg rounded-lg mt-4 p-6 w-full max-w-2xl">
+    <div
+      className="min-h-screen flex justify-center bg-gray-100 px-4 bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/REV1.jpg')",
+      }}
+    >
+      <div className="bg-white/80 backdrop-blur-md shadow-2xl rounded-xl p-6 w-full max-w-2xl mt-4 mb-60">
         <h2 className="text-3xl font-semibold text-slate-600 mb-6">PPN</h2>
 
         <div className="space-y-4">

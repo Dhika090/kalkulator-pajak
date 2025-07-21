@@ -8,7 +8,6 @@ import Pph4 from "./pages/pph4(2)";
 import PPN from "./pages/ppn";
 
 function App() {
-  //   return <PPh21Calculator />;
   return (
     <>
       <Router>

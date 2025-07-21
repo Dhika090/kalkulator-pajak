@@ -473,9 +473,17 @@ export default function KalkulatorPajak() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center bg-gray-100 px-4 sm:px-4 w-full max-w-content">
-      <div className="bg-white shadow-lg rounded-lg mb-8 mt-8 p-4 sm:p-4 w-full max-w-2xl">
-        <h2 className="text-xl font-bold mb-4 text-center">
+    <div
+      className="min-h-screen flex justify-center items-center bg-gray-200 px-4 bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/REV1.jpg')",
+      }}
+    >
+      <div
+        className="bg-white/80 backdrop-blur-md shadow-2xl rounded-xl p-6 w-full max-w-2xl"
+        style={{ marginBottom: "31pc" }}
+      >
+        <h2 className="text-2xl font-bold mb-4 text-center">
           KALKULATOR PAJAK PPh 21
         </h2>
         <div className="mb-3">
