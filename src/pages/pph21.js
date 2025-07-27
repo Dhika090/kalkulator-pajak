@@ -426,7 +426,6 @@ export default function KalkulatorPajak() {
           let totalPphLocal = 0;
 
           const hasilPerPegawai = jsonDataRaw.map((row) => {
-            // Normalize key names
             const cleanedRow = {};
             Object.keys(row).forEach((key) => {
               const cleanKey = key.replace(/\s+/g, "").toLowerCase();
@@ -438,7 +437,7 @@ export default function KalkulatorPajak() {
             const kodeObjek = (cleanedRow["kodeobjekpajak"] || "").trim();
             const tarifTer = parseFloat(cleanedRow["tarif"]) || 0;
 
-            // Temukan PTKP berdasarkan label pendek seperti "K/1"
+            // Temukan nilai PTKP berdasarkan label pendek (e.g., "K/1")
             const foundPtkp = ptkpOptions.find((opt) => {
               const shortLabel = opt.label.split("-")[0].trim().toUpperCase();
               return shortLabel === ptkpRaw;
@@ -450,27 +449,7 @@ export default function KalkulatorPajak() {
             dpp = dpp > 0 ? dpp : 0;
 
             // Hitung PPh 21
-            let pph = 0;
-            const isTarifTer = kodeObjek === "21-100-01";
-            if (isTarifTer && tarifTer > 0) {
-              pph = dpp * (tarifTer / 100);
-            } else {
-              // Tarif progresif jika bukan objek pajak 21-100-01
-              if (dpp <= 60000000) {
-                pph = dpp * 0.05;
-              } else if (dpp <= 250000000) {
-                pph = 60000000 * 0.05 + (dpp - 60000000) * 0.15;
-              } else if (dpp <= 500000000) {
-                pph =
-                  60000000 * 0.05 + 190000000 * 0.15 + (dpp - 250000000) * 0.25;
-              } else {
-                pph =
-                  60000000 * 0.05 +
-                  190000000 * 0.15 +
-                  250000000 * 0.25 +
-                  (dpp - 500000000) * 0.3;
-              }
-            }
+            const pph = penghasilan * (tarifTer / 100);
 
             totalDppLocal += dpp;
             totalPphLocal += pph;
@@ -479,7 +458,7 @@ export default function KalkulatorPajak() {
               ptkp: ptkpRaw,
               kodeObjekPajak: kodeObjek,
               penghasilanBruto: penghasilan,
-              tarif: isTarifTer ? tarifTer : "-",
+              tarif: tarifTer,
               dpp,
               pph21: pph,
             };
@@ -489,6 +468,8 @@ export default function KalkulatorPajak() {
           setTotalDpp(totalDppLocal);
           setTotalPph21(totalPphLocal);
           setDataPegawai(hasilPerPegawai);
+
+          console.log("Contoh hasil:", hasilPerPegawai[0]);
         };
 
         reader.readAsBinaryString(file);
