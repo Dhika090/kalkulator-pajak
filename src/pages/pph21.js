@@ -222,7 +222,8 @@ export default function KalkulatorPajak() {
   const [pph21, setPph21] = useState(0);
   const [includePotonganPph21, setIncludePotonganPph21] = useState(false);
   const [potonganPph21, setPotonganPph21] = useState(0);
-  const [ptkp, setPtkp] = useState(ptkpOptions[0].value);
+  // const [ptkp, setPtkp] = useState(ptkpOptions[0].value);
+  const [ptkp, setPtkp] = useState("");
   const [masaAwal, setMasaAwal] = useState("");
   const [masaAkhir, setMasaAkhir] = useState("");
   // Pajak Tidak Final:
@@ -235,6 +236,12 @@ export default function KalkulatorPajak() {
     14: "0", // Penghasilan Neto Sebelumnya
     19: "0", // PPh Dipungut Sebelumnya
   });
+
+  // excel import
+  const [jumlahBaris, setJumlahBaris] = useState(0);
+  const [totalDpp, setTotalDpp] = useState(0);
+  const [totalPph21, setTotalPph21] = useState(0);
+  const [dataPegawai, setDataPegawai] = useState([]);
 
   const filteredBulanAkhir = masaAwal
     ? bulanOptions.filter((bulan) => bulan.value >= masaAwal)
@@ -269,6 +276,10 @@ export default function KalkulatorPajak() {
   // **Hitung Penghasilan Kena Pajak**
   const penghasilanKenaPajak = Math.max(jumlahPenghasilanNetoPPh21 - ptkp, 0);
 
+  const getPtkpValue = () => {
+    const found = ptkpOptions.find((item) => item.label === ptkp);
+    return found ? found.value : 0;
+  };
   // **Hitung PPh Pasal 21 dengan tarif progresif**
   const hitungPPh21 = (pkp) => {
     let pajak = 0;
@@ -389,12 +400,17 @@ export default function KalkulatorPajak() {
 
     handleManualInput(no, numericValue);
   };
+  function parsePenghasilan(val) {
+    if (!val) return 0;
+    return parseInt(val.toString().replace(/[^0-9]/g, ""), 10) || 0;
+  }
 
   // import excel pph 21 bulanan
   const handleImportExcel = () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".xlsx, .xls";
+
     input.onchange = async (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -404,27 +420,81 @@ export default function KalkulatorPajak() {
           const workbook = XLSX.read(data, { type: "binary" });
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          const jsonDataRaw = XLSX.utils.sheet_to_json(worksheet);
 
-          console.log("Isi Excel:", jsonData);
+          let totalDppLocal = 0;
+          let totalPphLocal = 0;
 
-          if (jsonData.length > 0) {
-            const record = jsonData[0];
+          const hasilPerPegawai = jsonDataRaw.map((row) => {
+            // Normalize key names
+            const cleanedRow = {};
+            Object.keys(row).forEach((key) => {
+              const cleanKey = key.replace(/\s+/g, "").toLowerCase();
+              cleanedRow[cleanKey] = row[key];
+            });
 
-            setJenisPemotongan(record.JenisPemotongan || "");
-            setKodePajak(record.KodePajak || "");
-            setPtkp(record.PTKP || 54000000);
-            setPenghasilanBruto(record.PenghasilanBruto || 0);
-            setSkema(record.Skema || "gross");
-            setIncludePotonganPph21(record.IncludePotonganPph21 === "Ya");
-            if (record.PotonganPph21) {
-              setPotonganPph21(record.PotonganPph21);
+            const penghasilan = Number(cleanedRow["penghasilanbruto"]) || 0;
+            const ptkpRaw = (cleanedRow["ptkp"] || "").trim().toUpperCase();
+            const kodeObjek = (cleanedRow["kodeobjekpajak"] || "").trim();
+            const tarifTer = parseFloat(cleanedRow["tarif"]) || 0;
+
+            // Temukan PTKP berdasarkan label pendek seperti "K/1"
+            const foundPtkp = ptkpOptions.find((opt) => {
+              const shortLabel = opt.label.split("-")[0].trim().toUpperCase();
+              return shortLabel === ptkpRaw;
+            });
+            const nilaiPtkp = foundPtkp ? foundPtkp.value : 54000000;
+
+            // Hitung DPP
+            let dpp = penghasilan - nilaiPtkp;
+            dpp = dpp > 0 ? dpp : 0;
+
+            // Hitung PPh 21
+            let pph = 0;
+            const isTarifTer = kodeObjek === "21-100-01";
+            if (isTarifTer && tarifTer > 0) {
+              pph = dpp * (tarifTer / 100);
+            } else {
+              // Tarif progresif jika bukan objek pajak 21-100-01
+              if (dpp <= 60000000) {
+                pph = dpp * 0.05;
+              } else if (dpp <= 250000000) {
+                pph = 60000000 * 0.05 + (dpp - 60000000) * 0.15;
+              } else if (dpp <= 500000000) {
+                pph =
+                  60000000 * 0.05 + 190000000 * 0.15 + (dpp - 250000000) * 0.25;
+              } else {
+                pph =
+                  60000000 * 0.05 +
+                  190000000 * 0.15 +
+                  250000000 * 0.25 +
+                  (dpp - 500000000) * 0.3;
+              }
             }
-          }
+
+            totalDppLocal += dpp;
+            totalPphLocal += pph;
+
+            return {
+              ptkp: ptkpRaw,
+              kodeObjekPajak: kodeObjek,
+              penghasilanBruto: penghasilan,
+              tarif: isTarifTer ? tarifTer : "-",
+              dpp,
+              pph21: pph,
+            };
+          });
+
+          setJumlahBaris(jsonDataRaw.length);
+          setTotalDpp(totalDppLocal);
+          setTotalPph21(totalPphLocal);
+          setDataPegawai(hasilPerPegawai);
         };
+
         reader.readAsBinaryString(file);
       }
     };
+
     input.click();
   };
 
@@ -618,7 +688,35 @@ export default function KalkulatorPajak() {
 
             <div className="mt-4 p-4 border rounded-md bg-gray-50">
               <h3 className="font-bold">Hasil Perhitungan PPh 21</h3>
-              <div className="flex justify-between">
+
+              {jumlahBaris > 0 && (
+                <>
+                  <div className="mt-4 p-4 border rounded-md bg-white shadow-md">
+                    <h3 className="font-bold mb-2">Detail Per Pegawai</h3>
+                    <ul className="space-y-2 max-h-[400px] overflow-y-auto">
+                      {dataPegawai.map((pegawai, index) => (
+                        <li key={index} className="border p-2 rounded">
+                          <p>
+                            <strong>#{index + 1}</strong>
+                          </p>
+                          <p>PTKP: {pegawai.ptkp}</p>
+                          <p>Kode Objek Pajak: {pegawai.kodeObjekPajak}</p>
+                          <p>
+                            Penghasilan Bruto:{" "}
+                            {formatRupiahInput(pegawai.penghasilanBruto)}
+                          </p>
+                          <p>Tarif: {pegawai.tarif}%</p>
+                          <p>DPP: {formatRupiahInput(pegawai.dpp)}</p>
+                          <p>PPh 21: {formatRupiahInput(pegawai.pph21)}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
+
+              {/* Hasil hitungan manual dari form */}
+              <div className="flex justify-between mt-3 border-t pt-3">
                 <span>DPP</span>
                 <span>{formatRupiahInput(dpp)}</span>
               </div>
